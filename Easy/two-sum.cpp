@@ -14,18 +14,22 @@ class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
         vector<int> result;
+        unordered_map<int, int> diffs;
         for (std::size_t index = 0; index < nums.size(); ++index)
         {
-            for (std::size_t index2 = index + 1; index2 < nums.size(); ++index2)
+            diffs[target - nums[index]] = index;
+        }
+        for (std::size_t index = 0; index < nums.size(); ++index)
+        {
+            auto it = diffs.find(nums[index]);
+            if (it != diffs.end() && index != it->second)
             {
-                if (nums[index] + nums[index2] == target)
-                {
-                    result.push_back(index);
-                    result.push_back(index2);
-                    return result;
-                }
+                result.push_back(it->second);
+                result.push_back(index);
+                return result;
             }
         }
         return result;
     }
 };
+
