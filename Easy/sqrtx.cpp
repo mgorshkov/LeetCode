@@ -8,41 +8,27 @@
 class Solution {
 public:
     int mySqrt(int x) {
+        if (x == 0)
+            return 0;
         int start = 1;
         int end = x;
+        int res = 0;
      
         while (start <= end) {
             int middle = start + (end - start) / 2;
             
-            auto current_square_less = [&]() {
-                return middle < x / middle;
-            };
-            auto current_square_less_or_equal = [&]() {
-                return middle <= x / middle;
-            };
-            auto next_square_less = [&]() {
-                return middle + 1 < x / (middle + 1);
-            };
-            auto next_square_equals = [&]() {
-                return middle + 1 == x / (middle + 1);
-            };
-            auto next_square_more = [&]() {
-                return middle + 1 > x / (middle + 1);
-            };
-            
-            if (current_square_less_or_equal() && next_square_more()) {
+            int64_t pow2 = (int64_t)middle * middle;
+            if (pow2 == x) {
                 return middle;
             }
-            else if (current_square_less() && next_square_less()) {
+            else if (pow2 < x) {
+                res = middle;
                 start = middle + 1;
-            }
-            else if (next_square_equals()) {
-                return middle + 1;
             }
             else {
                 end = middle - 1;
             }
         }
-        return 0;
+        return res;
     }
 };
