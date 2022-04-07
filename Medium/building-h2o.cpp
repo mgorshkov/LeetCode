@@ -41,30 +41,32 @@ public:
     }
 
     void hydrogen(function<void()> releaseHydrogen) {
-        std::unique_lock lk(m_mutex);
-        m_cv.wait(lk, [this](){
-            return m_hydrogen_count < 2;
-        });
+        {
+            std::unique_lock lk(m_mutex);
+            m_cv.wait(lk, [this](){
+                return m_hydrogen_count < 2;
+            });
 
-        // releaseHydrogen() outputs "H". Do not change or remove this line.
-        releaseHydrogen();
+            // releaseHydrogen() outputs "H". Do not change or remove this line.
+            releaseHydrogen();
 
-        ++m_hydrogen_count;
-
+            ++m_hydrogen_count;
+        }
         m_cv.notify_all();
     }
 
     void oxygen(function<void()> releaseOxygen) {
-        std::unique_lock lk(m_mutex);
-        m_cv.wait(lk, [this](){
-            return m_hydrogen_count == 2;
-        });
+        {
+            std::unique_lock lk(m_mutex);
+            m_cv.wait(lk, [this](){
+                return m_hydrogen_count == 2;
+            });
 
-        // releaseOxygen() outputs "O". Do not change or remove this line.
-        releaseOxygen();
+            // releaseOxygen() outputs "O". Do not change or remove this line.
+            releaseOxygen();
 
-        m_hydrogen_count = 0;
-
+            m_hydrogen_count = 0;
+        }
         m_cv.notify_all();
     }
 
