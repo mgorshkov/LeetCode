@@ -42,15 +42,11 @@
 class Solution {
 public:
     int missingNumber(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        int prev = nums[0];
-        if (prev != 0)
-            return 0;
-        for (int i = 1; i < nums.size(); ++i) {
-            if (nums[i] - prev != 1)
-                return nums[i] - 1;
-            prev = nums[i];
+        int size = nums.size();
+        int sum = size * (size + 1) / 2;
+        for (int i = 0; i < nums.size(); ++i) {
+            sum -= nums[i];
         }
-        return prev + 1;
+        return sum;
     }
 };
