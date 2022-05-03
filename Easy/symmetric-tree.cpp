@@ -35,30 +35,6 @@
  */
 class Solution {
 public:
-    enum class Direction {
-        Neutral,
-        Left,
-        Right
-    };
-    
-    using NodeVector = vector<pair<int, Direction>>;
-    
-    void processLeft(TreeNode* node, NodeVector& result, Direction direction) {
-        if (node == nullptr)
-            return;
-        processLeft(node->left, result, Direction::Right);
-        processLeft(node->right, result, Direction::Left);
-        result.push_back({node->val, direction});
-    }
-    
-    void processRight(TreeNode* node, NodeVector& result, Direction direction) {
-        if (node == nullptr)
-            return;
-        processRight(node->right, result, Direction::Right);
-        processRight(node->left, result, Direction::Left);
-        result.push_back({node->val, direction});
-    }
-    
     bool isSymmetric(TreeNode* root) {
         if (root == nullptr)
             return false;
@@ -66,10 +42,21 @@ public:
             return true;
         if (root->left == nullptr || root->right == nullptr)
             return false;
-        NodeVector leftNodes;
-        processLeft(root->left, leftNodes, Direction::Neutral);
-        NodeVector rightNodes;
-        processRight(root->right, rightNodes, Direction::Neutral);
-        return leftNodes == rightNodes;
+        return compareTrees(root->left, root->right);
+    }
+    
+private:
+    bool compareTrees(TreeNode* node1, TreeNode* node2) {
+        if (node1 == nullptr && node2 == nullptr)
+            return true;
+        if (node1 == nullptr || node2 == nullptr)
+            return false;
+        if (node1->val != node2->val)
+            return false;
+        if (!compareTrees(node1->left, node2->right))
+            return false;
+        if (!compareTrees(node1->right, node2->left))
+            return false;
+        return true;
     }
 };
